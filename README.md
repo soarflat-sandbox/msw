@@ -60,3 +60,34 @@ export const handlers = [
   }),
 ];
 ```
+
+## モックサーバーのセットアップ
+
+Jest でモック API を動作させたい場合、以下のようにモックサーバーを構成する。
+
+```js
+import { setupServer } from 'msw/node';
+import { handlers } from './handlers';
+
+// 引数で渡したリクエストハンドラ（handlers）が動作するモックサーバーを構成する。
+export const server = setupServer(...handlers);
+```
+
+そして、テストコードに以下のように記述することで、リクエストをインターセプトするモックサーバーが起動する。
+
+```js
+// すべてのテストの前に、APIのモッキングを確立する。
+beforeAll(() => server.listen());
+
+// テスト中に追加したリクエストハンドラをリセットして、他のテストに影響を与えないようにする。
+afterEach(() => server.resetHandlers());
+
+// クリーンアップ
+afterAll(() => server.close());
+```
+
+ドキュメントにも書いてあるが、実際にはサーバーが起動するわけではない（サーバーという表現の方がわかりやすいのでサーバーという言葉を用いている）。
+
+> Although there is "server" in setupServer, the library does not establish any actual servers, but operates by augmenting native request issuing modules (such as https or XMLHttpRequest). The namespace is chosen for what the logic represents, not how it works internally.
+
+インターセプターが動作しているとイメージすると良いかもしれない。

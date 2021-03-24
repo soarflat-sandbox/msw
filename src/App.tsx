@@ -1,7 +1,9 @@
+import { LoginForm } from './LoginForm';
+
 function App() {
   return (
     <div>
-      <h1>React</h1>
+      <LoginForm />
     </div>
   );
 }

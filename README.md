@@ -5,3 +5,11 @@
 ## msw とは
 
 サービスワーカーを利用して、実際のリクエストをインターセプトする API モックライブラリ。
+
+## インストール
+
+```shell
+$ npm install msw --save-dev
+# or
+$ yarn add msw --dev
+```

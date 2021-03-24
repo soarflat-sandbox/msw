@@ -1,24 +1,3 @@
-# msw（Mock Service Worker）
-
-[Mock Service Worker](https://mswjs.io/)の学習用リポジトリ。
-
-## msw とは
-
-サービスワーカーを利用して、実際のリクエストをインターセプトする API モックライブラリ。
-
-## インストール
-
-```shell
-$ npm install msw --save-dev
-# or
-$ yarn add msw --dev
-```
-
-## REST API のモック
-
-以下の`rest.post`のようにリクエストハンドラを定義することで、指定したリクエストをインターセプトし、それに対するレスポンスを定義できる。
-
-```js
 import { rest } from 'msw';
 
 // モッキングするリクエストを指定する
@@ -59,4 +38,3 @@ export const handlers = [
     );
   }),
 ];
-```

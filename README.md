@@ -91,3 +91,65 @@ afterAll(() => server.close());
 > Although there is "server" in setupServer, the library does not establish any actual servers, but operates by augmenting native request issuing modules (such as https or XMLHttpRequest). The namespace is chosen for what the logic represents, not how it works internally.
 
 インターセプターが動作しているとイメージすると良いかもしれない。
+
+## メモ
+
+### `rest.get()` などの第１引数に、クエリパラメータを含んだ URL を渡すと警告が出る
+
+以下のように、クエリパラメータを含んだ URL を渡すと
+
+```ts
+const handlers = [
+  rest.get('https://jsonplaceholder.typicode.com/comments/?_limit=10', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json([
+        {
+          postId: 1,
+          id: 1,
+          name: 'A',
+          email: 'dummya@gmail.com',
+          body: 'test body a',
+        },
+      ])
+    );
+  }),
+];
+```
+
+以下のような警告がでる。
+
+```
+[MSW] Found a redundant usage of query parameters in the request handler URL for "GET https://jsonplaceholder.typicode.com/comments/?_limit=10". Please match against a path instead, and access query parameters in the response resolver function:
+
+      rest.get("/comments/", (req, res, ctx) => {
+        const query = req.url.searchParams
+        const _limit = query.get("_limit")
+      })
+```
+
+警告を出さないようにするためには以下のようにする必要がある。
+
+```ts
+const handlers = [
+  rest.get('https://jsonplaceholder.typicode.com/comments/', (req, res, ctx) => {
+    const query = req.url.searchParams;
+    const _limit = query.get('_limit');
+
+    if (_limit === '10') {
+      return res(
+        ctx.status(200),
+        ctx.json([
+          {
+            postId: 1,
+            id: 1,
+            name: 'A',
+            email: 'dummya@gmail.com',
+            body: 'test body a',
+          },
+        ])
+      );
+    }
+  }),
+];
+```

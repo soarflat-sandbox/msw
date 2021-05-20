@@ -19,7 +19,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "cy:run": "cypress run",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "react-scripts test",
+    "test:e2e": "start-server-and-test start http://localhost:3000 cy:run",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -41,6 +44,8 @@
     ]
   },
   "devDependencies": {
-    "msw": "^0.27.2"
+    "cypress": "^7.3.0",
+    "msw": "^0.27.2",
+    "start-server-and-test": "^1.12.2"
   }
 }
